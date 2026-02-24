@@ -21,7 +21,6 @@
         min-height: 100vh;
     }
 
-    /* ====== HEADER ====== */
     .dashboard-header {
         text-align: center;
         margin-top: 40px;
@@ -34,12 +33,6 @@
         font-size: 2.5rem;
     }
 
-    .dashboard-header p {
-        color: #666;
-        font-size: 1.1rem;
-    }
-
-    /* ====== GRID DE TARJETAS ====== */
     .card-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -47,7 +40,6 @@
         padding: 20px;
     }
 
-    /* ====== ESTILO DE TARJETA (GLASSMORPHISM) ====== */
     .dashboard-card {
         background: var(--card-bg);
         backdrop-filter: blur(10px);
@@ -93,7 +85,6 @@
         margin-bottom: 0;
     }
 
-    /* ====== BOTÓN CERRAR SESIÓN ====== */
     .logout-btn {
         border: none;
         background: none;
@@ -117,49 +108,56 @@
 <div class="container py-5">
 
     <div class="dashboard-header">
-        <span class="badge rounded-pill bg-white text-primary px-3 py-2 mb-3 shadow-sm">ADMINISTRACIÓN</span>
-        <h1>Hola, {{ Auth::user()->name ?? 'Administrador' }}</h1>
-        
+        <span class="badge rounded-pill bg-white text-primary px-3 py-2 mb-3 shadow-sm">ADMINISTRACIÓN NUTRI</span>
+        <h1>Hola, {{ session('admin_nombre') ?? 'Administrador' }}</h1>
     </div>
 
     <div class="card-grid">
 
+        {{-- Perfil --}}
         <a href="#" class="dashboard-card">
             <i class="bi bi-person-circle"></i>
             <h5>Mi Perfil</h5>
             <p>Configura tu cuenta y preferencias de acceso.</p>
         </a>
 
-        <a href="{{ route('servicios.index') }}" class="dashboard-card">
+        {{-- Servicios (Nueva vista Firebase) --}}
+        <a href="{{ url('/ver-servicios') }}" class="dashboard-card">
             <i class="bi bi-grid-1x2-fill"></i>
             <h5>Servicios</h5>
-            <p>Gestiona el catálogo de servicios de nutrición.</p>
+            <p>Gestiona el catálogo de servicios en Firebase.</p>
         </a>
 
-        <a href="{{ url('Usuarios') }}" class="dashboard-card">
-            <i class="bi bi-people-fill"></i>
-            <h5>Usuarios</h5>
-            <p>Controla la lista de padres y especialistas registrados.</p>
+
+        {{-- Clientes (Nueva vista Firebase de usuarios) --}}
+        <a href="{{ url('/ver-usuarios') }}" class="dashboard-card">
+            <i class="bi bi-person-badge-fill"></i>
+            <h5>Clientes</h5>
+            <p>Nueva lista de padres y clientes en Firestore.</p>
         </a>
 
-        <a href="{{ url('leer-contactos') }}" class="dashboard-card">
+        {{-- Mensajes (Nueva vista Firebase) --}}
+        <a href="{{ url('/ver-contactos') }}" class="dashboard-card">
             <i class="bi bi-chat-heart-fill"></i>
             <h5>Mensajes</h5>
-            <p>Lee las consultas enviadas por los usuarios.</p>
+            <p>Lee las consultas enviadas por los usuarios a la nube.</p>
         </a>
 
-        <a href="{{ route('contacto') }}" class="dashboard-card">
+        {{-- Formulario (Crear contacto) --}}
+        <a href="{{ url('/crear-contacto') }}" class="dashboard-card">
             <i class="bi bi-envelope-paper-heart-fill"></i>
             <h5>Formulario</h5>
-            <p>Vista previa del formulario de contacto.</p>
+            <p>Vista previa del formulario de contacto Firebase.</p>
         </a>
 
-        <a href="{{ route('inicio') }}" class="dashboard-card">
+        {{-- Ir al Sitio --}}
+        <a href="{{ url('/') }}" class="dashboard-card">
             <i class="bi bi-house-heart-fill"></i>
             <h5>Ir al Sitio</h5>
             <p>Volver a la página principal de Nutripeques.</p>
         </a>
 
+        {{-- Salir --}}
         <form method="POST" action="{{ route('logout') }}" class="logout-btn">
             @csrf
             <button type="submit" class="dashboard-card w-100 border-0">

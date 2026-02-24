@@ -1,66 +1,40 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\AdmisController;
+use App\Http\Controllers\ViewController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\MensajeController;
 use App\Http\Controllers\FirebaseController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+// Rutas Públicas
+Route::get('/', function() { return view('index'); })->name('inicio');
+Route::get('/Contacto', function() { return view('contacto'); })->name('contacto');
+Route::post('guardar-contacto', [AdmisController::class, 'guardarContacto']);
 
-// Página principal pública
-Route::view('/', 'index')->name('inicio');
+// Auth
+Route::get('/login', function() { return view('auth.login'); })->name('login');
+Route::post('/login', [AdmisController::class, 'procesarLogin']);
+Route::get('/register', function() { return view('auth.register'); })->name('register');
+Route::post('/register', [AdmisController::class, 'procesarRegistro']);
+Route::post('/logout', [AdmisController::class, 'logout'])->name('logout');
 
-// Página de contacto pública
-Route::view('Contacto', 'contacto')->name('contacto');
-Route::post('guardar-contacto', [ContactController::class, 'store']);
-
-
-// -------------------------------------------------------
-// RUTAS PROTEGIDAS POR LOGIN
-// -------------------------------------------------------
-Route::middleware(['auth'])->group(function () {
-
-    // Dashboard
+// Protegidas
+Route::middleware(['checkAdmin'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-    // Lista de usuarios
-    Route::get('Usuarios', [HomeController::class, 'users']);
-
-    // Mensajes enviados desde contacto
-    Route::get('leer-contactos', [ContactController::class, 'index']);
-
-    // CRUD Servicios
-    Route::resource('servicios', ServicioController::class);
-
-    Route::delete('/mensajes/{id}', [MensajeController::class, 'destroy'])->name('mensajes.destroy');
-
-    Route::patch('/mensajes/{id}/read', [MensajeController::class, 'markAsRead'])->name('mensajes.read');
-
-    // Esta ruta servirá para ver los datos
-    //Route::get('/ver-usuarios', [FirebaseController::class, 'index']);
-
-    Route::get('/crear-usuario', [FirebaseController::class, 'crear']);
-    Route::post('/guardar-usuario', [FirebaseController::class, 'store']);
-
-    // Rutas de Servicios
-    Route::get('/crear-servicio', [FirebaseController::class, 'crearServicio']);
-    Route::post('/guardar-servicio', [FirebaseController::class, 'storeServicio']);
-
-    // Rutas de Contacto
-    Route::get('/crear-contacto', [FirebaseController::class, 'crearContacto']);
-    Route::post('/guardar-contacto', [FirebaseController::class, 'storeContacto']);
+    Route::get('/ver-usuarios', [ViewController::class, 'verUsuarios'])->name('ver.usuarios');
+    Route::get('/ver-servicios', [ViewController::class, 'verServicios'])->name('ver.servicios');
+    Route::get('/ver-contactos', [ViewController::class, 'verContactos'])->name('ver.contactos');
+    
+    Route::get('/crear-usuario', [FirebaseController::class, 'crear'])->name('crear.usuario');
+    Route::get('/crear-servicio', [FirebaseController::class, 'crearServicio'])->name('crear.servicio');
+    Route::get('/crear-contacto', [FirebaseController::class, 'crearContacto'])->name('crear.contacto');
+    Route::post('/guardar-usuario', [FirebaseController::class, 'store'])->name('guardar.usuario');
+    Route::post('/guardar-servicio', [FirebaseController::class, 'storeServicio'])->name('guardar.Servicio');
+    Route::post('/guardar-contacto', [FirebaseController::class, 'storeContacto'])->name('guardar.contacto');
+    Route::get('/estado-contacto/{id}/{estado}', [ViewController::class, 'estadoContacto'])->name('estado.contacto');
 
 
+    // Rutas de eliminar/editar (ViewController)
+    Route::delete('/eliminar-firebase/{coleccion}/{id}', [ViewController::class, 'eliminarDoc']);
+    Route::get('/editar-firebase/{coleccion}/{id}', [ViewController::class, 'editarDoc']);
+    Route::put('/actualizar-firebase/{coleccion}/{id}', [ViewController::class, 'actualizarDoc']);
 });
-
-
-// Autenticación
-Auth::routes();

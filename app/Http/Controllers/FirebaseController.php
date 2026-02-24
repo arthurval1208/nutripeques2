@@ -30,8 +30,15 @@ class FirebaseController extends Controller
         ];
 
         $response = Http::post($url, $datos);
-        return $response->successful() ? "Usuario guardado en Firestore" : "Error Users: " . $response->body();
+
+    if ($response->successful()) {
+        return redirect('/ver-usuarios')
+               ->with('status', 'Usuario creado correctamente');
     }
+
+    return redirect()->back()
+           ->with('error', 'Error al guardar el usuario');
+}
 
     /**
      * 2. GUARDAR EN LA COLECCIÓN 'servicios'
@@ -51,7 +58,13 @@ class FirebaseController extends Controller
         ];
 
         $response = Http::post($url, $datos);
-        return $response->successful() ? "Servicio guardado en Firestore" : "Error Servicios: " . $response->body();
+        if ($response->successful()) {
+    return redirect('/ver-servicios')
+           ->with('status', 'Servicio creado correctamente');
+}
+
+return redirect()->back()
+       ->with('error', 'Error al guardar servicio');
     }
 
     /**
@@ -74,7 +87,13 @@ class FirebaseController extends Controller
         ];
 
         $response = Http::post($url, $datos);
-        return $response->successful() ? "Contacto guardado en Firestore" : "Error Contacts: " . $response->body();
+if ($response->successful()) {
+    return redirect('/ver-contactos')
+           ->with('status', 'contracto creado correctamente');
+}
+
+return redirect()->back()
+       ->with('error', 'Error al guardar servicio');
     }
 
     // Funciones para cargar las vistas de los formularios

@@ -8,9 +8,7 @@
     <title>@yield('title', 'Nutripeques')</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -54,35 +52,42 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          @guest
-            <ul class="navbar-nav ms-auto align-items-md-center">
-              @if (Route::has('login'))
-                <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Iniciar sesión</a></li>
-              @endif
-              @if (Route::has('register'))
-                <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Regístrate</a></li>
-              @endif
-            </ul>
-          @endguest
 
-          @auth
-            <ul class="navbar-nav ms-auto">
+          {{-- SI EL ADMIN ESTÁ LOGUEADO --}}
+          @if(session('admin_logged'))
+
+            <ul class="navbar-nav ms-auto align-items-center">
               <li class="nav-item dropdown">
-                <a id="navbarDropdown" class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
-                  <i class="bi bi-person-circle me-2"></i> {{ Auth::user()->name }}
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+                  <i class="bi bi-person-circle me-2"></i> 
+                  {{ session('admin_nombre') }}
                 </a>
+
                 <div class="dropdown-menu dropdown-menu-end p-2">
-                  <a class="dropdown-item rounded-3" href="{{ route('logout') }}"
-                      onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión
-                  </a>
-                  <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                  <form action="{{ route('logout') }}" method="POST">
                     @csrf
+                    <button type="submit" class="dropdown-item rounded-3">
+                      <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión
+                    </button>
                   </form>
                 </div>
               </li>
             </ul>
-          @endauth
+
+          @else
+
+            {{-- SI NO ESTÁ LOGUEADO --}}
+            <ul class="navbar-nav ms-auto align-items-md-center">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('login') }}">Iniciar sesión</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('register') }}">Regístrate</a>
+              </li>
+            </ul>
+
+          @endif
+
         </div>
       </div>
     </nav>
