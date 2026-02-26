@@ -10,12 +10,18 @@ Route::get('/', function() { return view('index'); })->name('inicio');
 Route::get('/Contacto', function() { return view('contacto'); })->name('contacto');
 Route::post('guardar-contacto', [AdmisController::class, 'guardarContacto']);
 
+
+
 // Auth
 Route::get('/login', function() { return view('auth.login'); })->name('login');
 Route::post('/login', [AdmisController::class, 'procesarLogin']);
 Route::get('/register', function() { return view('auth.register'); })->name('register');
 Route::post('/register', [AdmisController::class, 'procesarRegistro']);
 Route::post('/logout', [AdmisController::class, 'logout'])->name('logout');
+Route::get('/perfil', function () {
+    return view('perfil');
+})->name('perfil');
+
 
 // Protegidas
 Route::middleware(['checkAdmin'])->group(function () {
@@ -37,4 +43,10 @@ Route::middleware(['checkAdmin'])->group(function () {
     Route::delete('/eliminar-firebase/{coleccion}/{id}', [ViewController::class, 'eliminarDoc']);
     Route::get('/editar-firebase/{coleccion}/{id}', [ViewController::class, 'editarDoc']);
     Route::put('/actualizar-firebase/{coleccion}/{id}', [ViewController::class, 'actualizarDoc']);
+
+
+
+    
 });
+
+
