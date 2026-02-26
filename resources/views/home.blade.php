@@ -4,7 +4,7 @@
 
 @section('content')
 <style>
-    /* ====== VARIABLES NUTRI ====== */
+   
     :root {
         --purple-gradient: linear-gradient(135deg, #7276d1 0%, #5a5eb1 100%);
         --soft-blue: #e3f2fd;
@@ -114,18 +114,18 @@
 
     <div class="card-grid">
 
-        {{-- Perfil --}}
-        <a href="#" class="dashboard-card">
-            <i class="bi bi-person-circle"></i>
-            <h5>Mi Perfil</h5>
-            <p>Configura tu cuenta y preferencias de acceso.</p>
-        </a>
+{{-- Perfil --}}
+<a href="{{ route('perfil') }}" class="dashboard-card">
+    <i class="bi bi-person-circle"></i>
+    <h5>Mi Perfil</h5>
+    <p>Configura tu cuenta y preferencias de acceso.</p>
+</a>
 
         {{-- Servicios (Nueva vista Firebase) --}}
         <a href="{{ url('/ver-servicios') }}" class="dashboard-card">
             <i class="bi bi-grid-1x2-fill"></i>
-            <h5>Servicios</h5>
-            <p>Gestiona el catálogo de servicios en Firebase.</p>
+            <h5>Planes Alimenticios</h5>
+            <p>Planes alimenticios recomendados por rango de edad</p>
         </a>
 
 
