@@ -89,6 +89,11 @@ body {
             <h5>Enviar Consulta</h5>
         </a>
 
+        <a href="{{ url('/actividades') }}" class="dashboard-card">
+            <i class="bi bi-bicycle"></i>
+            <h5>Actividades Saludables Recomendadas</h5>
+        </a>
+
         <a href="{{ url('/') }}" class="dashboard-card">
             <i class="bi bi-house-heart-fill"></i>
             <h5>Ir al Inicio</h5>
