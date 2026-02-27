@@ -109,7 +109,7 @@
 
     <div class="dashboard-header">
         <span class="badge rounded-pill bg-white text-primary px-3 py-2 mb-3 shadow-sm">ADMINISTRACIÓN NUTRI</span>
-        <h1>Hola, {{ session('admin_nombre') ?? 'Administrador' }}</h1>
+        <h1>Hola, {{ session('usuario') ?? 'Administrador' }}</h1>
     </div>
 
     <div class="card-grid">

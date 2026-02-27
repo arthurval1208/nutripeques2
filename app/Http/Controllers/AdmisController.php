@@ -47,25 +47,41 @@ class AdmisController extends Controller
     // --- PROCESAR REGISTRO ---
     public function procesarRegistro(Request $request) 
     {
-        $partes = explode(' ', $request->name, 2);
-        $nombre = $partes[0];
-        $apellido = $partes[1] ?? '';
+    $email = $request->input('email');
+    $password = $request->input('password');
 
-        $datos = ['fields' => [
-            'nombre'     => ['stringValue' => $nombre],
-            'apellido'   => ['stringValue' => $apellido],
-            'correo'     => ['stringValue' => $request->email],
-            'contraseña' => ['stringValue' => $request->password],
-            'rol'        => ['stringValue' => 'admin']
-        ]];
+    $url = "https://firestore.googleapis.com/v1/projects/mi-pagina-ec6da/databases/(default)/documents/users?key=AIzaSyDp_V5toh_KO4R7SDm4lHNKP4OHYBIrwRI";
 
-        $response = Http::post($this->baseUrl . "administradores" . $this->key, $datos);
+    $response = Http::get($url)->json();
 
-        if ($response->successful()) {
-            return redirect()->to('http://localhost:81/dev/public/login')->with('success', 'Cuenta creada.');
-        }
-        return redirect()->back()->withErrors(['error' => 'Error al registrar en Firebase.']);
+    if (!isset($response['documents'])) {
+        return redirect()->back()->with('error', 'No hay usuarios registrados');
     }
+
+    foreach ($response['documents'] as $doc) {
+        $fields = $doc['fields'];
+
+        if (
+            isset($fields['email']['stringValue']) &&
+            $fields['email']['stringValue'] === $email &&
+            password_verify($password, $fields['password']['stringValue'])
+        ) {
+
+            session([
+                'usuario' => $fields['name']['stringValue'],
+                'rol' => $fields['rol']['stringValue']
+            ]);
+
+            if (session('rol') == 'admin') {
+                return redirect('/home');
+            } else {
+                return redirect('/panel-usuario');
+            }
+        }
+    }
+
+    return redirect()->back()->with('error', 'Credenciales incorrectas');
+}
 
     // --- CERRAR SESIÓN ---
     public function logout(Request $request) 

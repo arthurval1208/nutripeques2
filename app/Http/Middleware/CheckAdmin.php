@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 
 class CheckAdmin
 {
-    public function handle(Request $request, Closure $next)
-    {
-        // Usamos el helper session() que es el más confiable
-        if (!session()->has('admin_logged') || session('admin_logged') !== true) {
-            return redirect('/login');
-        }
-        return $next($request);
+public function handle($request, Closure $next)
+{
+    if (session('rol') != 'admin') {
+        return redirect('/login');
     }
+
+    return $next($request);
+}
 }

@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Iniciar sesión - Nutripeques')
+
 @push('styles')
 <style>
     :root{ --primary:#4e54c8; --primary-2:#6b73ff; --accent:#f5c542; --bg:#f3f3f8; --card:#ffffff; }
@@ -18,32 +19,30 @@
     <div class="auth-card">
         <div class="auth-header">Iniciar Sesión</div>
         <div class="auth-body">
-            
-            @if($errors->any())
-                <div class="alert alert-danger" style="color:red; margin-bottom:15px;">
-                    <ul class="mb-0">@foreach($errors->all() as $error) <li>{{ $error }}</li> @endforeach</ul>
+
+            @if(session('error'))
+                <div style="color:red; margin-bottom:15px;">
+                    {{ session('error') }}
                 </div>
             @endif
-
-            {{-- USAMOS LA RUTA MANUAL QUE FUNCIONA EN TU NAVEGADOR --}}
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ url('/procesar-login') }}">
                 @csrf
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Correo electrónico</label>
-                    <input type="email" name="email" class="form-control" placeholder="admin@nutripeques.com" required autofocus>
-                </div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Contraseña</label>
-                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
-                </div>
+                <label class="form-label fw-bold">Correo electrónico</label>
+                <input type="email" name="email" class="form-control" placeholder="correo@ejemplo.com" required>
+
+                <label class="form-label fw-bold">Contraseña</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
 
                 <button type="submit" class="btn-primary">Entrar al Panel</button>
 
                 <div class="mt-3 text-center">
-                    <a href="http://localhost:81/dev/public/register" style="color:var(--primary); text-decoration:none;">Crear cuenta nueva</a>
+                    <a href="{{ url('/register') }}" style="color:var(--primary); text-decoration:none;">
+                        Crear cuenta nueva
+                    </a>
                 </div>
             </form>
+
         </div>
     </div>
 </div>

@@ -28,7 +28,6 @@
       .navbar .nav-link:hover { color: var(--accent) !important; }
       .navbar-brand { color:#fff !important; font-size: 1.4rem; }
       .navbar-brand img { height:35px; border-radius:8px; }
-      
       .dropdown-menu {
         border-radius: 15px;
         border: none;
@@ -39,64 +38,68 @@
     @stack('styles')
 </head>
 <body>
-  <div id="app">
-    <nav class="navbar navbar-expand-md navbar-dark shadow-sm">
-      <div class="container">
-        <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/') }}">
-          <img src="{{ asset('imagenes/hala.png') }}" alt="hala" class="me-2">
-          <span>Nutripeques</span>
-        </a>
+<div id="app">
+<nav class="navbar navbar-expand-md navbar-dark shadow-sm">
+<div class="container">
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+<a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/') }}">
+    <img src="{{ asset('imagenes/hala.png') }}" alt="hala" class="me-2">
+    <span>Nutripeques</span>
+</a>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+    <span class="navbar-toggler-icon"></span>
+</button>
 
-          {{-- SI EL ADMIN ESTÁ LOGUEADO --}}
-          @if(session('admin_logged'))
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-            <ul class="navbar-nav ms-auto align-items-center">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
-                  <i class="bi bi-person-circle me-2"></i> 
-                  {{ session('admin_nombre') }}
-                </a>
+@if(session()->has('usuario'))
 
-                <div class="dropdown-menu dropdown-menu-end p-2">
-                  <form action="{{ route('logout') }}" method="POST">
+    <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+                <i class="bi bi-person-circle me-2"></i> 
+                {{ session('usuario') }}
+                
+                @if(session('rol') == 'admin')
+                    <span class="badge bg-warning text-dark ms-2">Admin</span>
+                @endif
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-end p-2">
+                <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="dropdown-item rounded-3">
-                      <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión
+                        <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión
                     </button>
-                  </form>
-                </div>
-              </li>
-            </ul>
+                </form>
+            </div>
+        </li>
+    </ul>
 
-          @else
+@else
 
-            {{-- SI NO ESTÁ LOGUEADO --}}
-            <ul class="navbar-nav ms-auto align-items-md-center">
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('login') }}">Iniciar sesión</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('register') }}">Regístrate</a>
-              </li>
-            </ul>
+    <ul class="navbar-nav ms-auto align-items-md-center">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('login') }}">Iniciar sesión</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('register') }}">Regístrate</a>
+        </li>
+    </ul>
 
-          @endif
+@endif
 
-        </div>
-      </div>
-    </nav>
+</div>
+</div>
+</nav>
 
-    <main class="py-4">
-      @yield('content')
-    </main>
-  </div>
+<main class="py-4">
+@yield('content')
+</main>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
