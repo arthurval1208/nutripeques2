@@ -60,6 +60,9 @@ Route::get('/plan/{edad}', function ($edad) {
 Route::get('/crear_contacto', function () {
     return view('crear_contacto'); // Asegúrate de que el archivo se llame crear-contacto.blade.php
 });
+Route::get('/actividades', function () {
+    return view('actividades'); // Asegúrate de crear el archivo actividades.blade.php
+})->name('actividades');
 
 /*
 |---------------------------------------------------------------------------
