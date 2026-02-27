@@ -7,9 +7,9 @@ use App\Http\Controllers\FirebaseController;
 use App\Http\Controllers\LoginController;
 
 /*
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 | RUTAS PÚBLICAS
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 */
 
 Route::get('/', function () {
@@ -26,14 +26,14 @@ Route::get('/perfil', function () {
     return view('perfil');
 })->name('perfil');
 
-Route::get('/plan/{edad}', function ($edad) {
-    return view('plan', compact('edad'));
-});
+Route::get('/plan', function () {
+    return view('plan');
+})->name('ver-planes');
 
 /*
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 | LOGIN Y REGISTRO
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 */
 
 Route::get('/login', [LoginController::class, 'login'])->name('login');
@@ -48,17 +48,23 @@ Route::post('/guardar-usuario', [FirebaseController::class, 'store']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 /*
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 | PANEL USUARIO
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 */
 
 Route::view('/panel-usuario', 'panel_usuario')->name('panel.usuario');
+Route::get('/plan/{edad}', function ($edad) {
+    return view('plan', compact('edad'));
+});
+Route::get('/crear_contacto', function () {
+    return view('crear_contacto'); // Asegúrate de que el archivo se llame crear-contacto.blade.php
+});
 
 /*
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 | RUTAS PROTEGIDAS SOLO ADMIN
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 */
 
 Route::middleware(['checkAdmin'])->group(function () {
