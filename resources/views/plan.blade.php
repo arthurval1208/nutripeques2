@@ -38,7 +38,7 @@
 
 <nav class="navbar navbar-expand-md navbar-dark shadow-sm">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/home') }}">
+        <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ route('panel.usuario') }}">
             <img src="{{ asset('imagenes/hala.png') }}" alt="logo" class="me-2"> Nutripeques
         </a>
     </div>

@@ -84,7 +84,7 @@ body {
             <h5>Planes Nutricionales</h5>
         </a>
 
-        <a href="{{ url('/crear_contacto') }}" class="dashboard-card">
+        <a href="{{ url('/contacto') }}" class="dashboard-card">
             <i class="bi bi-envelope-paper-heart-fill"></i>
             <h5>Enviar Consulta</h5>
         </a>
