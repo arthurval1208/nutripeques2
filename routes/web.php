@@ -59,6 +59,7 @@ Route::middleware(['checkAdmin'])->group(function () {
     Route::get('/registro-nutriologo', function () { return view('auth.register_nutriologo'); })->name('admin.register_nutri');
     Route::post('/guardar-nutriologo', [LoginController::class, 'guardarNutriologo'])->name('guardar.nutriologo');
     Route::get('/registro-admin', function () { return view('auth.register_admin'); })->name('admin.register');
+    Route::get('/crear-usuario', function () { return view('auth.register'); })->name('usuario.crear');
     
     Route::get('/ver-usuarios', [ViewController::class, 'verUsuarios'])->name('ver.usuarios');
     Route::get('/ver-contactos', [ViewController::class, 'verContactos'])->name('ver.contactos');
