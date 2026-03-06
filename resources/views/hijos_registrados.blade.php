@@ -91,7 +91,7 @@
                                 <h3 class="fw-bold text-dark mb-1">{{ $hijo['nombre'] }} {{ $hijo['apellido'] }}</h3>
                                 <p class="text-muted mb-3">
                                     <i class="bi bi-calendar3 me-1"></i> {{ $hijo['edad'] }} años • 
-                                    <i class="bi bi-gender-ambiguous me-1"></i> {{ ucfirst($hijo['sexo']) }}
+                                    <i class="bi bi-gender-ambiguous me-1"></i> {{ ucfirst($hijo['sexo']?? 'No definido') }}
                                 </p>
                                 
                                 <div class="d-flex align-items-center mt-3">
