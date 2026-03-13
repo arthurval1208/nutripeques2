@@ -107,3 +107,4 @@ Route::post('/guardar-contacto', [FirebaseController::class, 'storeContacto'])->
 Route::get('/plan/{edad}', function ($edad) { return view('plan', compact('edad')); });
 Route::get('/actividades', function () { return view('actividades'); })->name('actividades');
 Route::get('/mis-consultas', [ViewController::class, 'misConsultas'])->name('mis_consultas');
+Route::post('/buscar-alimento', [ViewController::class, 'buscarAlimento'])->name('alimento.buscar');
