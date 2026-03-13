@@ -283,7 +283,7 @@ public function estadoContacto($id, $estado) {
     }
 
 public function descargarPlanHijo($id_nino) {
-    // 1. Buscamos en la colección 'planes' de Firebase
+    
     $url = $this->baseUrl . "planes?key=" . $this->key;
     $response = Http::get($url)->json();
 
@@ -292,7 +292,7 @@ public function descargarPlanHijo($id_nino) {
     if (isset($response['documents'])) {
         foreach ($response['documents'] as $doc) {
             $f = $doc['fields'];
-            // 2. Buscamos el plan que pertenezca a este niño
+            
             if (isset($f['nino_id']['stringValue']) && $f['nino_id']['stringValue'] == $id_nino) {
                 $miPlan = [
                     'titulo'  => $f['titulo']['stringValue'] ?? 'Plan Nutricional',
@@ -311,10 +311,10 @@ public function misConsultas() {
 
     $miIdSesion = (string)session('user_id');
 
-    // Traemos las consultas
+    
     $response = Http::get($this->baseUrl . "contacts?key=" . $this->key)->json();
 
-    // Traemos las respuestas
+    
     $respuestas = Http::get($this->baseUrl . "respuestas?key=" . $this->key)->json();
 
     $misConsultas = [];
@@ -334,7 +334,7 @@ public function misConsultas() {
 
                 $respuestaTexto = null;
 
-                // Buscar respuesta relacionada
+                
                 if(isset($respuestas['documents'])){
                     foreach($respuestas['documents'] as $r){
 
@@ -364,22 +364,65 @@ public function misConsultas() {
 public function mostrarPerfilSegunRol() {
     $rol = session('rol');
 
-    // Dependiendo del rol guardado en el LoginController, cargamos la vista adecuada
+    
     if ($rol == 'admin') {
         return view('perfil_admin');
     } elseif ($rol == 'nutriologo') {
         return view('perfil_nutri');
     } else {
-        // Este es el perfil para el Usuario/Padre (perfil.blade.php)
+        
         return view('perfil');
     }
+}
+public function buscarAlimento(Request $request) {
+    $nombreAlimento = $request->input('alimento');
+
+    
+    $response = Http::get("https://world.openfoodfacts.org/cgi/search.pl", [
+        'search_terms' => $nombreAlimento,
+        'search_simple' => 1,
+        'action' => 'process',
+        'json' => 1,
+        'page_size' => 1 
+    ])->json();
+
+    if (isset($response['products']) && count($response['products']) > 0) {
+        $producto = $response['products'][0];
+        $grado = strtoupper($producto['nutrition_grades'] ?? 'unknown'); // A, B, C, D, E
+        $nombreReal = $producto['product_name'] ?? $nombreAlimento;
+
+        
+        switch ($grado) {
+            case 'A':
+            case 'B':
+                $resultado = " **$nombreReal** es altamente recomendado (Calificación $grado).";
+                $color = "alert-success";
+                break;
+            case 'C':
+                $resultado = " **$nombreReal** es aceptable (Calificación $grado). Consumo moderado.";
+                $color = "alert-info";
+                break;
+            case 'D':
+            case 'E':
+                $resultado = " **$nombreReal** NO es recomendado para niños (Calificación $grado).";
+                $color = "alert-danger";
+                break;
+            default:
+                $resultado = " No tenemos datos nutricionales suficientes para '$nombreReal'.";
+                $color = "alert-secondary";
+        }
+    } else {
+        $resultado = " No se encontró el alimento '$nombreAlimento' en la base de datos.";
+        $color = "alert-warning";
+    }
+
+    return back()->with(['resultado_busqueda' => $resultado, 'color_alerta' => $color]);
 }
     
 public function actualizarDoc(Request $request, $coleccion, $id)
 {
     $fields = [];
 
-    // Recorremos los campos del formulario para enviarlos a Firebase
     foreach ($request->except(['_token', '_method']) as $campo => $valor) {
         if ($valor === null) continue;
         $fields[$campo] = [
@@ -389,14 +432,13 @@ public function actualizarDoc(Request $request, $coleccion, $id)
 
     $url = $this->baseUrl . $coleccion . "/" . $id . "?key=" . $this->key;
 
-    // Enviamos la actualización a Firebase
+    
     $response = Http::patch($url, [
         'fields' => $fields
     ]);
 
     if ($response->successful()) {
-        // --- LÓGICA DE ACTUALIZACIÓN DE SESIÓN EN TIEMPO REAL ---
-        // Si el ID que se acaba de editar es el del usuario logueado, refrescamos su sesión
+
         if ($id == session('user_id')) {
             
             // Actualizamos los campos comunes
@@ -449,6 +491,8 @@ public function actualizarDoc(Request $request, $coleccion, $id)
                         'mensaje' => $f['mensaje']['stringValue'] ?? ($f['Mensaje']['stringValue'] ?? 'Sin mensaje'),
                         'estado'  => $f['Estado']['stringValue'] ?? 'Pendiente',
                         'fecha'   => $fecha
+
+                        
                     ];
                 }
             }
